@@ -1,0 +1,12 @@
+# Java CDP BY 01 Design and Architecture: Principle of software development
+# Java CDP BY 03 Design and Architecture: Creational Patterns
+# Java CDP BY 04 Design and Architecture: Structural Patterns
+# Java CDP BY 05 Backend: Classloading
+# Java CDP BY 06 Backend: Memory Management
+# Java CDP BY 07 Backend: Garbage Collection in Java
+# Java CDP BY 09 Design and Architecture: Troubleshooting
+# Java CDP BY 12 Infrastructure: Unit, jmock
+# Java CDP BY 13 Infrastructure: Tomcat + Apache
+# Java CDP BY 15 Backend: Web-Services
+# Java CDP BY 17 # Backend: Spring Core Basics
+# Java CDP BY 18 # Backend: Spring MVC
