@@ -42,7 +42,7 @@
                 <archive>
                     <manifest>
                         <addClasspath>true</addClasspath>
-                         <mainClass>com.epam.training.module03.simulator.SupermanSimulator</mainClass>
+                        <mainClass>com.epam.training.module03.simulator.SupermanSimulator</mainClass>
                     </manifest>
                 </archive>
             </configuration>
