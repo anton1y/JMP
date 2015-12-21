@@ -1,0 +1,3 @@
+java -jar <java>\bd\lib\derbyrun.jar ij
+ > CONNECT 'jdbc:derby:d:/Task4-5-Facade;create=true';
+ > run 'd:/tables.sql'
