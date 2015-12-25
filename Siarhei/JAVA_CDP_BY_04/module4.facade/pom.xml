@@ -23,9 +23,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.37</version>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.190</version>
     </dependency>
   </dependencies>
    <build>
@@ -67,6 +67,25 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+              <execution>
+                <phase>process-resources</phase>
+                <configuration>
+                 <tasks>
+                   <copy todir="${basedir}/target">
+                     <fileset dir="${basedir}" includes="test.mv.db" />
+                   </copy>
+                 </tasks>
+                </configuration>
+              <goals>
+            <goal>run</goal>
+          </goals>
+        </execution>
+      </executions>
+     </plugin> 
     </plugins>
   </build>
 </project>
