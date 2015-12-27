@@ -7,10 +7,6 @@ import org.apache.log4j.Logger;
 
 import jmp.classloading.common.PluginInterface;
 
-/**
- * Hello world!
- *
- */
 public class App {
     final static Logger logger = Logger.getLogger(App.class);
 
