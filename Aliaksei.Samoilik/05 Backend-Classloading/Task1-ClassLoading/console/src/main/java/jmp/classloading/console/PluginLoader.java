@@ -27,7 +27,7 @@ public class PluginLoader {
         // get uri list of JAR
         List<URI> uriList = Files.walk(Paths.get(folder)).filter(path -> path.toString().endsWith("jar"))
                 .map(p -> p.toUri()).collect(Collectors.toList());
-        // Create URL Jar list for class loading and create list of avaliable
+        // Create URL Jar list for class loading and create list of available
         // plugins
         for (URI uri : uriList) {
             List<String> jarsPluginList = getPluginsList(uri.toURL().toString());
@@ -49,8 +49,8 @@ public class PluginLoader {
     }
 
     /**
-     * read a plugins file with the plugin list in JAR
-     * 
+     * read a "plugins" file with the plugin list in JAR
+     * "plugins" contains list of plugin classes in JAR
      * @param jarURI
      * @return
      */
