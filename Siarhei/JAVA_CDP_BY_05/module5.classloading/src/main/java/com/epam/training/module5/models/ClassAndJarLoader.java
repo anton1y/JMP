@@ -1,48 +1,69 @@
 package com.epam.training.module5.models;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.apache.log4j.Logger;
+
 
 public class ClassAndJarLoader {
 
-   public void loadJarFile() {
-       String fileName="module03.Singleton-0.0.1-SNAPSHOT.jar";
-       URLClassLoader child;
-    try {
-        child = new URLClassLoader (new URL[]{new File(fileName).toURI().toURL()}, this.getClass().getClassLoader());
-        Class<?> classToLoad = Class.forName ("com.epam.training.module03.models.Superman", true, child);
-        Method method = classToLoad.getDeclaredMethod ("getInstance");
-        Object instance = classToLoad.newInstance ();
-        Object result = method.invoke (instance);
-        System.out.println("result:"+result);
-    } catch (MalformedURLException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (SecurityException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (InstantiationException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (InvocationTargetException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    public static final Logger logger = Logger.getLogger(ClassAndJarLoader.class);
+    public List<String> loadClassesNameFromJarFile(String fileName) {
+        File file = new File(fileName);
+        List<String> listClasses = null;
+        try {
+            logger.info("Start scanning classes from jar");
+            listClasses = scanJarFileForClasses(file);
+        } catch (IllegalArgumentException | IOException  | SecurityException e) {
+            logger.error("Problem with reading classes from jar",e);
+        }
+        return listClasses;
     }
-   }
+
+    private List<String> scanJarFileForClasses(File file) throws IOException, IllegalArgumentException {
+        if (file == null || !file.exists())
+            throw new IllegalArgumentException("Invalid jar-file to scan provided");
+        if (file.getName().endsWith(".jar")) {
+            List<String> foundClasses = new ArrayList<String>();
+            try (JarFile jarFile = new JarFile(file)) {
+                Enumeration<JarEntry> entries = jarFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    if (entry.getName().endsWith(".class")) {
+                        String name = entry.getName();
+                        name = name.substring(0, name.lastIndexOf(".class"));
+                        if (name.indexOf("/") != -1)
+                            name = name.replaceAll("/", ".");
+                        if (name.indexOf("\\") != -1)
+                            name = name.replaceAll("\\", ".");
+                        foundClasses.add(name);
+                    }
+                }
+            }
+            return foundClasses;
+        }
+        throw new IllegalArgumentException("No jar-file provided");
+    }
+
+    public Class<?> loadClass(String jarPathName, String readClassNameForLoad) {
+        URLClassLoader child;
+        Class<?> classToLoad = null;
+        try {
+            child = new URLClassLoader(new URL[] { new File(jarPathName).toURI().toURL() }, this.getClass().getClassLoader());
+            classToLoad = Class.forName(readClassNameForLoad, true, child);
+        } catch (MalformedURLException | ClassNotFoundException e) {
+            logger.error("Problem with loading class",e);
+        }
+
+        return classToLoad;
+    }
 }
