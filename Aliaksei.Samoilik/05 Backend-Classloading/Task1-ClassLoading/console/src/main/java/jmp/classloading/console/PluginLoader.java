@@ -1,12 +1,11 @@
 package jmp.classloading.console;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,35 +21,27 @@ public class PluginLoader {
 
     public List<PluginInterface> loadPlugins(String folder) throws Exception {
         List<PluginInterface> result = new ArrayList<>();
-        List<String> pluginsList = new ArrayList<>();
-        List<URL> jarURLList = new ArrayList<>();
         // get uri list of JAR
-        List<URI> uriList = Files.walk(Paths.get(folder)).filter(path -> path.toString().endsWith("jar"))
-                .map(p -> p.toUri()).collect(Collectors.toList());
+        List<File> fileList = Files.walk(Paths.get(folder)).filter(path -> path.toString().endsWith("jar"))
+                .map(p -> p.toFile()).collect(Collectors.toList());
         // Create URL Jar list for class loading and create list of available
         // plugins
-        for (URI uri : uriList) {
-            List<String> jarsPluginList = getPluginsList(uri.toURL().toString());
-            jarURLList.add(uri.toURL());
-            pluginsList.addAll(jarsPluginList);
+        for (File file : fileList) {
+            JarClassLoader jarClassLoader = new JarClassLoader(file);
+            List<String> jarsPluginList = getPluginsList(file.toURI().toURL().toString());
+            for (String pluginClass : jarsPluginList) {
+                Class<?> clazz = Class.forName(pluginClass, true, jarClassLoader);
+                PluginInterface plugin = (PluginInterface) clazz.getConstructor().newInstance();
+                result.add(plugin);
+            }
         }
-        // Load JARs from folder
-        URL[] jars = jarURLList.toArray(new URL[0]);
-        URLClassLoader child = new URLClassLoader(jars, this.getClass().getClassLoader());
-
-        // Create list of plugins objects
-        for (String pluginClass : pluginsList) {
-            Class<?> clazz = Class.forName(pluginClass, true, child);
-            PluginInterface plugin = (PluginInterface) clazz.getConstructor().newInstance();
-            result.add(plugin);
-        }
-
         return result;
     }
 
     /**
-     * read a "plugins" file with the plugin list in JAR
-     * "plugins" contains list of plugin classes in JAR
+     * read a "plugins" file with the plugin list in JAR "plugins" contains list
+     * of plugin classes in JAR
+     * 
      * @param jarURI
      * @return
      */
