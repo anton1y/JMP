@@ -1,0 +1,2 @@
+Run previous module with next command
+java -jar module6.memoryManagment-0.0.1-SNAPSHOT.jar -XX:+UseSerialGC  -Xms6m -Xmx18m -Xmn2m -XX:PermSize=20m -XX:MaxPermSize=30m
