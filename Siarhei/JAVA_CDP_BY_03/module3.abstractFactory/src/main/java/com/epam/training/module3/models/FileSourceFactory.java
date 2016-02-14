@@ -5,8 +5,8 @@ import com.epam.training.module3.sourceInterface.Source;
 
 public class FileSourceFactory implements AbstractSourceFactory {
 
-    public Source createSource() {
-        return new FileSource();
-    }
+  public Source createSource() {
+    return new FileSource();
+  }
 
 }
