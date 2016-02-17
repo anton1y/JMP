@@ -5,9 +5,9 @@ import com.epam.training.module3.sourceInterface.Source;
 
 public class DBSourceFactory implements AbstractSourceFactory {
 
-    public Source createSource() {
-        
-        return new DBSource();
-    }
+  public Source createSource() {
+
+    return new DBSource();
+  }
 
 }
