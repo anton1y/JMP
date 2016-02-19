@@ -1,6 +1,6 @@
-package jmp.creationalPatterns.abstractFactory.factory;
+package jmp.creationalpatterns.abstractfactory.factory;
 
-import jmp.creationalPatterns.abstractFactory.dao.PersonDAO;
+import jmp.creationalpatterns.abstractfactory.dao.PersonDAO;
 
 public abstract class AbstractDAOFactory {
     public static final String ACCESS = "access";

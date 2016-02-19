@@ -1,16 +1,25 @@
-package jmp.creationalPatterns.abstractFactory.dao;
+package jmp.creationalpatterns.abstractfactory.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import jmp.creationalPatterns.abstractFactory.model.Person;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import jmp.creationalpatterns.abstractfactory.model.Person;
+import jmp.creationalpatterns.abstractfactory.utils.DatabaseUtils;
 
 public class AccessPersonDAO implements PersonDAO {
+
+    private static final Log LOG = LogFactory.getLog(AccessPersonDAO.class);
+
+    private static final String DB_ERROR = "db error";
 
     private String fileName;
 
@@ -18,15 +27,13 @@ public class AccessPersonDAO implements PersonDAO {
         this.fileName = fileName;
     }
 
-    // TODO USE Connection pool and probably move to the factory
     public Connection getConnection() {
         Connection conn = null;
         try {
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
         } catch (ClassNotFoundException | SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(DB_ERROR, e);
         }
         return conn;
     }
@@ -34,33 +41,31 @@ public class AccessPersonDAO implements PersonDAO {
     @Override
     public void writePerson(Person person) {
         Connection conn = null;
+        PreparedStatement stmt = null;
         try {
-            String sql = "INSERT INTO Person(FirstName, LastName) " + "VALUES ( '" + person.getFirstName() + "', '"
-                    + person.getLastName() + "')";
             conn = getConnection();
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
+            stmt = conn.prepareStatement("INSERT INTO Person(FirstName, LastName) VALUES ( ?, ?)");
+            stmt.setString(1, person.getFirstName());
+            stmt.setString(2, person.getLastName());
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(DB_ERROR, e);
         } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            DatabaseUtils.close(stmt);
+            DatabaseUtils.close(conn);
         }
     }
 
     @Override
     public List<Person> readPersons() {
         Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
         List<Person> personList = new ArrayList<>();
         try {
             conn = getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Person");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM Person");
             while (rs.next()) {
                 Person person = new Person();
                 person.setId(rs.getInt("id"));
@@ -68,16 +73,13 @@ public class AccessPersonDAO implements PersonDAO {
                 person.setLastName(rs.getString("LastName"));
                 personList.add(person);
             }
+            rs.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(DB_ERROR, e);
         } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            DatabaseUtils.close(rs);
+            DatabaseUtils.close(stmt);
+            DatabaseUtils.close(conn);
         }
         return personList;
     }
@@ -85,11 +87,13 @@ public class AccessPersonDAO implements PersonDAO {
     @Override
     public Person find(int id) {
         Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
         Person person = null;
         try {
             conn = getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Person where id =" + id);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM Person where id =" + id);
             if (rs.next()) {
                 person = new Person();
                 person.setId(rs.getInt("id"));
@@ -98,15 +102,11 @@ public class AccessPersonDAO implements PersonDAO {
                 System.out.println(rs.getString(1));
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(DB_ERROR, e);
         } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            DatabaseUtils.close(rs);
+            DatabaseUtils.close(stmt);
+            DatabaseUtils.close(conn);
         }
         return person;
     }
