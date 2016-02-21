@@ -1,14 +1,13 @@
-package jmp.creationalPatterns.abstractFactory.factory;
+package jmp.creationalpatterns.abstractfactory.factory;
 
-import jmp.creationalPatterns.abstractFactory.dao.AccessPersonDAO;
-import jmp.creationalPatterns.abstractFactory.dao.PersonDAO;
+import jmp.creationalpatterns.abstractfactory.dao.AccessPersonDAO;
+import jmp.creationalpatterns.abstractfactory.dao.PersonDAO;
 
 public class AccessDAOFactory extends AbstractDAOFactory {
 
     @Override
     public PersonDAO getPersonDAO(String fileName) {
-        PersonDAO personDAO = new AccessPersonDAO(fileName);
-        return personDAO;
+        return new AccessPersonDAO(fileName);
     }
 
 }

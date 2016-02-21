@@ -1,13 +1,13 @@
-package jmp.creationalPatterns.abstractFactory.dao;
+package jmp.creationalpatterns.abstractfactory.dao;
 
 import java.util.List;
 
-import jmp.creationalPatterns.abstractFactory.model.Person;
+import jmp.creationalpatterns.abstractfactory.model.Person;
 
 public interface PersonDAO {
-    public void writePerson(Person person);
+    void writePerson(Person person);
 
-    public List<Person> readPersons();
+    List<Person> readPersons();
 
-    public Person find(int id);
+    Person find(int id);
 }

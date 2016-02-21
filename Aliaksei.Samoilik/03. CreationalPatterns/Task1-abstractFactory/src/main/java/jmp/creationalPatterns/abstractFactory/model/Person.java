@@ -1,4 +1,4 @@
-package jmp.creationalPatterns.abstractFactory.model;
+package jmp.creationalpatterns.abstractfactory.model;
 
 public class Person {
     private int id;
