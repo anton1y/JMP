@@ -59,6 +59,36 @@
 							<verbose>true</verbose>
 						</configuration>
 					</execution>
+					<execution>
+						<id>wsdl-weather</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<packageName>com.epam.training.module15.client.weather</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://www.webservicex.net/globalweather.asmx?wsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>wsdl-football</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<packageName>com.epam.training.module15.client.fifa</packageName>
+							<wsdlUrls>
+								<wsdlUrl>http://footballpool.dataaccess.eu/data/info.wso?wsdl</wsdlUrl>
+							</wsdlUrls>
+							<verbose>true</verbose>
+							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+						</configuration>
+					</execution>
+
 				</executions>
 			</plugin>
 			<plugin>
