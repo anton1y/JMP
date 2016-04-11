@@ -1,12 +1,18 @@
 package com.epam.training.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Product {
+
     private Long id;
 
     private String name;
 
     private String description;
 
+    @XmlAttribute
     public Long getId() {
         return id;
     }
@@ -15,6 +21,7 @@ public class Product {
         this.id = id;
     }
 
+    @XmlAttribute
     public String getName() {
         return name;
     }
@@ -23,6 +30,7 @@ public class Product {
         this.name = name;
     }
 
+    @XmlAttribute
     public String getDescription() {
         return description;
     }

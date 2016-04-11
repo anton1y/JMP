@@ -12,10 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -39,6 +37,23 @@ public class ProductController {
         return model;
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET, headers ="Alternates=specialTemplate")
+    public ModelAndView showProductsSpecialTemplate() {
+        ModelAndView model = new ModelAndView("productsSpecial");
+        List<Product> productsList = productService.getProducts();
+        model.addObject("products", productsList);
+
+        return model;
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET, headers ="Alternates=superSpecialTemplate")
+    public ModelAndView showProductsSuperSpecialTemplate() {
+        ModelAndView model = new ModelAndView("superProductsSpecial");
+        List<Product> productsList = productService.getProducts();
+        model.addObject("products", productsList);
+
+        return model;
+    }
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ModelAndView showProduct(@PathVariable("id") Long id,HttpServletRequest request) {
         
