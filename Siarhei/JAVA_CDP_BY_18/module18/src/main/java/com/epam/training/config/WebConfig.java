@@ -15,10 +15,14 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import com.epam.training.interceptor.ExecuteTimeInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -44,6 +48,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         super.configureMessageConverters(converters);
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(setupIntercepters());
+        super.addInterceptors(registry);
+    }
+
     private HttpMessageConverter<Object> createXmlHttpMessageConverter() {
         MarshallingHttpMessageConverter xmlConverter = new MarshallingHttpMessageConverter();
         List<MediaType> mediaType = new ArrayList();
@@ -64,6 +74,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         resolver.setViewClass(JstlView.class);
 
         return resolver;
+    }
+
+    @Bean
+    public HandlerInterceptorAdapter setupIntercepters() {
+        return new ExecuteTimeInterceptor();
     }
 
     @Bean
