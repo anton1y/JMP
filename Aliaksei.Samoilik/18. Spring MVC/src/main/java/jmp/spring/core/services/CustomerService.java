@@ -17,6 +17,22 @@ public class CustomerService {
     public List<Customer> findCustomer(String lastName) {
         return customerRepository.findByLastName(lastName);
     }
+    
+    public List<Customer> findAll() {
+        return customerRepository.findAll();
+    }
+
+    public Customer getCustomer(long id){
+        return customerRepository.findOne(id);
+    }
+
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(long id){
+        customerRepository.delete(id);
+    }
 
     public void initCustomers(List<Customer> customers) {
         customers.stream().forEach(customer -> customerRepository.save(customer));

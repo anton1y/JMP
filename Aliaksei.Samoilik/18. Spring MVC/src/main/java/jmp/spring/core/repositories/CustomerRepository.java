@@ -9,4 +9,6 @@ import jmp.spring.core.entities.Customer;
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
     List<Customer> findByLastName(String lastName);
+    
+    List<Customer> findAll();
 }
